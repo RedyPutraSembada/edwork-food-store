@@ -1,0 +1,1 @@
+export const START_FETCHING_PRODUCT = 'features/Product/START_FETCHING_PRODUCT';
