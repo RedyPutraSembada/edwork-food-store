@@ -1,30 +1,31 @@
 import axios from "axios";
+import { getUserToken } from "../../utils/token";
 
 export const getTag = async () => {
-    const dataUserLogin = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null;
-    return await axios.get('http://localhost:3000/api/tags', { headers: { Authorization: dataUserLogin.token } });
+    const dataUserLogin = getUserToken();
+    return await axios.get('http://localhost:3000/api/tags', { headers: { Authorization: dataUserLogin } });
 }
 
 export const deleteTag = async (id) => {
-    const dataUserLogin = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null;
-    return await axios.delete(`http://localhost:3000/api/tags/${id}`, { headers: { Authorization: dataUserLogin.token } });
+    const dataUserLogin = getUserToken();
+    return await axios.delete(`http://localhost:3000/api/tags/${id}`, { headers: { Authorization: dataUserLogin } });
 }
 
 export const createTag = async (data) => {
-    const dataUserLogin = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null;
+    const dataUserLogin = getUserToken();
     return await axios.post(`http://localhost:3000/api/tags`, data, {
         headers: {
-            Authorization: dataUserLogin.token,
+            Authorization: dataUserLogin,
             'Content-Type': 'application/json; charset=utf-8'
         }
     });
 }
 
 export const updateTag = async (id, data) => {
-    const dataUserLogin = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null;
+    const dataUserLogin = getUserToken();
     return await axios.put(`http://localhost:3000/api/tags/${id}`, data, {
         headers: {
-            Authorization: dataUserLogin.token,
+            Authorization: dataUserLogin,
             'Content-Type': 'application/json; charset=utf-8'
         }
     });

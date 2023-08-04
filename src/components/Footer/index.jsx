@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 
 const Footer = () => {
     return (
-        <div style={{ backgroundColor: "gray", height: "200px", width: "100%", marginTop: "20px" }}>
+        <div style={{ backgroundColor: "gray", height: "200px", width: "100%", marginTop: "20px", position: "absolute" }}>
             <Container>
                 <h1>Footer</h1>
             </Container>

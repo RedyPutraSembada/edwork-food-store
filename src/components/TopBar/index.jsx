@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react";
 import { logoutUser } from "../../app/api/auth";
 import { userLogout } from "../../app/features/auth/actions";
+import { getProduct } from "../../app/api/product";
+import { getAllProducts } from "../../app/features/product/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "../../app/api/categories";
+import { cartGet } from "../../app/api/cart";
 
 const { Navbar, Nav, NavDropdown, InputGroup, Form } = require("react-bootstrap");
 const { PersonFill, Cart, Search } = require('react-bootstrap-icons');
 
 const TopBar = () => {
-    let dataUserLogin = JSON.parse(localStorage.getItem('auth'));
+    let dataUserLogin = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : { user: null, token: null };
+    const { dataCart } = useSelector(state => state);
+    const [notifCart, setNorifCart] = useState(0);
+    const dispatch = useDispatch();
     const [name, setName] = useState('');
+    const [category, setCategory] = useState([]);
+    const [search, setSearch] = useState({
+        q: ''
+    });
     const [admin, setAdmin] = useState(false);
+
+    useEffect(() => {
+        setNorifCart(dataCart.data.length);
+    }, [dataCart])
 
     useEffect(() => {
         if (dataUserLogin !== null) {
@@ -19,7 +35,25 @@ const TopBar = () => {
                 setAdmin(true);
             }
         }
+        getCategories();
+        setNorifCart(dataCart.data.length);
+        getCart()
     }, []);
+
+
+    useEffect(() => {
+        handleSearch();
+    }, [search]);
+
+    const getCart = async () => {
+        let res = await cartGet();
+        setNorifCart(res.data.length);
+    }
+
+    const getCategories = async () => {
+        let res = await getCategory();
+        setCategory(res.data);
+    }
 
     const logout = async () => {
         let result = window.confirm("Apakah Anda yakin untuk logout?");
@@ -34,6 +68,19 @@ const TopBar = () => {
         }
     }
 
+    const handleSearch = async () => {
+        let res = await getProduct(search.q);
+        let data = getAllProducts(res.data.data);
+        dispatch(data);
+    }
+
+    const handleCategory = async (value) => {
+        console.log(value);
+        let res = await getProduct('', value);
+        let data = getAllProducts(res.data.data);
+        dispatch(data);
+    }
+
     return (
         <>
             <Navbar expand="lg" bg="secondary" data-bs-theme="dark" className="px-5 py-3">
@@ -43,7 +90,11 @@ const TopBar = () => {
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <NavDropdown title="Category" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                            {
+                                category.map((item, i) => (
+                                    <NavDropdown.Item value={item.name} key={`category-${i + 1}`} onClick={e => handleCategory(item.name)}>{item.name}</NavDropdown.Item>
+                                ))
+                            }
                         </NavDropdown>
                         {
                             admin ? <NavDropdown title="Input Data" id="basic-nav-dropdown">
@@ -60,6 +111,7 @@ const TopBar = () => {
                         name="search"
                         placeholder="Search"
                         aria-label="Search"
+                        onChange={(e) => setSearch({ ...search, q: e.target.value })}
                     />
                 </InputGroup>
                 <Navbar.Collapse className="justify-content-end">
@@ -69,11 +121,11 @@ const TopBar = () => {
                         {
                             name ?
                                 <>
-                                    <Nav.Link href="#link"><Cart /></Nav.Link>
+                                    <Nav.Link href="/carts" style={{ display: "flex" }}><Cart style={{ marginTop: "10px" }} /><div><div style={{ fontSize: "12px", backgroundColor: "red", justifyContent: "end", paddingRight: "3px", paddingLeft: "3px", borderRadius: "50%", color: "white" }}>{notifCart}</div></div></Nav.Link>
                                     <NavDropdown title={<PersonFill />}>
                                         <NavDropdown.Item href="#">Profile</NavDropdown.Item>
-                                        <NavDropdown.Item href="#">Invoice</NavDropdown.Item>
-                                        <NavDropdown.Item href="#">Address</NavDropdown.Item>
+                                        <NavDropdown.Item href="/pesanan">Pesanan</NavDropdown.Item>
+                                        <NavDropdown.Item href="/delivery">Address</NavDropdown.Item>
                                     </NavDropdown>
                                 </>
                                 : ''

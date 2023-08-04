@@ -1,10 +1,6 @@
-import { USER_LOGIN, USER_LOGOUT } from "./constants";
+import { START_FETCHING_PRODUCT } from './constants';
 
-export const userLogin = (payload) => ({
-    type: USER_LOGIN,
+export const getAllProducts = (payload) => ({
+    type: START_FETCHING_PRODUCT,
     payload
-});
-
-export const userLogout = () => ({
-    type: USER_LOGOUT
 });

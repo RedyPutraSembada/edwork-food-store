@@ -59,7 +59,7 @@ const Tag = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        var formData = new FormData();
+        let formData = new FormData();
         formData.append('name', value);
         if (models.option === 'input') {
             let res = await createTag(formData);
