@@ -39,14 +39,13 @@ const Pesanan = () => {
                         {
                             pesanan.map((item, i) => (
                                 <tr key={`order-${i + 1}`}>
-                                    <td>{item.order_number}</td>
+                                    <td>#{item.order_number}</td>
                                     <td>{item.status}</td>
                                     <td>
                                         {
                                             item.order_items.map((tem, j) => (
                                                 <ul key={`items-${j + 1}`}>
                                                     <li>{tem.name}</li>
-                                                    <li>{tem.price}</li>
                                                 </ul>
 
                                             ))

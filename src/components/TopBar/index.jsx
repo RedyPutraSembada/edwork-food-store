@@ -6,6 +6,7 @@ import { getAllProducts } from "../../app/features/product/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategory } from "../../app/api/categories";
 import { cartGet } from "../../app/api/cart";
+import { useNavigate } from "react-router-dom";
 
 const { Navbar, Nav, NavDropdown, InputGroup, Form } = require("react-bootstrap");
 const { PersonFill, Cart, Search } = require('react-bootstrap-icons');
@@ -21,19 +22,22 @@ const TopBar = () => {
         q: ''
     });
     const [admin, setAdmin] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         setNorifCart(dataCart.data.length);
     }, [dataCart])
 
     useEffect(() => {
-        if (dataUserLogin !== null) {
+        if (dataUserLogin.user !== null) {
             setName(<Navbar.Text>
-                Signed in as: {dataUserLogin.user.full_name}
+                Signed in as: {dataUserLogin.user?.full_name}
             </Navbar.Text>);
-            if (dataUserLogin.user.role === "admin") {
+            if (dataUserLogin.user?.role === "admin") {
                 setAdmin(true);
             }
+        } else {
+            setName('')
         }
         getCategories();
         setNorifCart(dataCart.data.length);
@@ -60,8 +64,11 @@ const TopBar = () => {
         if (result) {
             try {
                 await logoutUser();
-                userLogout();
+                let data = userLogout()
+                dispatch(data);
+                localStorage.removeItem('auth');
                 window.location.reload();
+                navigate('/');
             } catch (err) {
                 console.log(err);
             }

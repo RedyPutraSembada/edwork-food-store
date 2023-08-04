@@ -10,6 +10,7 @@ import { getAllProducts } from "../../app/features/product/actions";
 import { Cart } from "react-bootstrap-icons";
 import { cartUpdate } from "../../app/api/cart";
 import { getAllCart } from "../../app/features/cart/actions";
+import Paginat from "../../components/Paginat";
 
 const Home = () => {
     const { dataProduct } = useSelector(state => state);
@@ -127,6 +128,7 @@ const Home = () => {
                         ))
                     }
                 </Row>
+                <Paginat />
             </Container >
             <Footer />
         </>

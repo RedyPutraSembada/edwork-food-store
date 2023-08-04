@@ -23,6 +23,13 @@ const Invoice = () => {
         setInvoice(res.data)
     }
 
+    const rupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR"
+        }).format(number);
+    }
+
     return (
         <>
             <TopBar />
@@ -40,7 +47,7 @@ const Invoice = () => {
                         </tr>
                         <tr>
                             <td>Total Amount</td>
-                            <td>{invoice.sub_total}</td>
+                            <td>{rupiah(invoice.sub_total)}</td>
                         </tr>
                         <tr>
                             <td>Billed To</td>

@@ -7,6 +7,7 @@ import { getAllProducts } from "../../app/features/product/actions";
 import { getCategory } from "../../app/api/categories";
 import { getTag } from "../../app/api/tags";
 import { useNavigate } from "react-router-dom";
+import Paginat from "../../components/Paginat";
 
 const Product = () => {
     let { dataProduct } = useSelector(state => state);
@@ -150,6 +151,13 @@ const Product = () => {
         }
     }
 
+    const rupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR"
+        }).format(number);
+    }
+
     // const handleChangeSelect = async (e) => {
     //     console.log(e.target.selectedOptions);
     //     let v = Array.from(e.target.selectedOptions, option => option.value);
@@ -163,7 +171,7 @@ const Product = () => {
             {notif}
             <Container>
                 <h2>Products</h2>
-                <Button variant="primary" className="my-3" onClick={event => optionModels('input')}>
+                <Button variant="primary" className="mb-3" onClick={event => optionModels('input')}>
                     Add new product
                 </Button>
                 <Table striped bordered hover className="text-center">
@@ -187,7 +195,7 @@ const Product = () => {
                                     <td><img src={`http://localhost:3000/images/${item.image_url}`} alt="cover" width={200} height={200} /></td>
                                     <td>{item.name}</td>
                                     <td>{item.description}</td>
-                                    <td>{item.price}</td>
+                                    <td>{rupiah(item.price)}</td>
                                     <td>
                                         <ul>
                                             <li>{item.category.name}</li>
@@ -207,6 +215,7 @@ const Product = () => {
                         }
                     </tbody>
                 </Table>
+                <Paginat />
             </Container>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header>
