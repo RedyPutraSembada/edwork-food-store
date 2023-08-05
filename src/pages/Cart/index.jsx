@@ -1,48 +1,38 @@
 import { Button, Container, Table } from "react-bootstrap";
 import TopBar from "../../components/TopBar";
-import { useMemo, useState } from "react";
-import { cartGet, cartUpdate } from "../../app/api/cart";
+import { useMemo, } from "react";
+import { cartUpdate } from "../../app/api/cart";
 import { useEffect } from "react";
 import Item from "../../components/Item";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCart } from "../../app/features/cart/actions";
 
 const Cart = () => {
-    const [cart, setCart] = useState([]);
-    const [objectCart, setObjectCart] = useState({
-        items: []
-    });
+    const { dataCart } = useSelector(state => state);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const conCart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : '';
-    const calculation = useMemo(() => cart.reduce((prevValue, nextItem) => prevValue + (nextItem.qty * nextItem.price), 0), [cart]);
-
-    // const total =  cart.reduce((prevValue, nextItem) => prevValue + (nextItem.qty * nextItem.price), 0);
+    const calculation = useMemo(() => dataCart.data.reduce((prevValue, nextItem) => prevValue + (nextItem.qty * nextItem.price), 0), [dataCart]);
 
     useEffect(() => {
         if (conCart === '') {
             navigate('/check-address');
         }
-        getCart();
     }, []);
 
     useEffect(() => {
-        console.log(cart);
-    }, [cart])
+        console.log(dataCart);
+    }, [dataCart])
 
-    useEffect(() => {
-        setObjectCart({ ...objectCart, items: cart });
-    }, [cart])
-
-    const updateCart = async () => {
-        console.log(objectCart);
-        let formData = JSON.stringify(objectCart);
+    const chekout = async () => {
+        let formData = {
+            items: dataCart.data
+        }
         await cartUpdate(formData);
         localStorage.setItem('cart', JSON.stringify(''));
         navigate('/check-address');
-    }
 
-    const getCart = async () => {
-        let res = await cartGet();
-        setCart(res.data);
     }
 
     const rupiah = (number) => {
@@ -55,12 +45,32 @@ const Cart = () => {
 
     //* Update QTY
     const getQty = (qty, id) => {
-        let neWCart = [...cart];
-        const cartindex = neWCart.findIndex(el => el._id === id);
+        let newCart = [...dataCart.data];
+        const cartindex = newCart.findIndex(el => el._id === id);
         if (cartindex > -1) {
-            neWCart[cartindex].qty = qty;
+            newCart[cartindex].qty = qty;
         }
-        setCart(neWCart);
+        dispatch(getAllCart(newCart))
+    }
+
+    const deleteData = async (value) => {
+        let newCart = [...dataCart.data];
+        const cartIndex = newCart.findIndex(el => el._id === value._id);
+        if (cartIndex > -1) {
+            //* hapus pada index ke cartIndex dan hapus 1 data
+            newCart.splice(cartIndex, 1);
+            let data = getAllCart(newCart);
+            dispatch(data);
+            let formData = {
+                items: newCart
+            }
+            try {
+                let res = await cartUpdate(formData)
+                dispatch(getAllCart(res.data));
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
     return (
@@ -76,16 +86,17 @@ const Cart = () => {
                             <th>Barang</th>
                             <th>Harga</th>
                             <th>QTY</th>
+                            <th>Delete From Cart</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            cart.map((item, i) => (
-                                <Item item={item} key={i + 1} getQty={getQty} />
+                            dataCart.data.map((item, i) => (
+                                <Item item={item} key={i + 1} getQty={getQty} deleteData={deleteData} />
                             ))
                         }
                         <tr>
-                            <td colSpan={4}><Button className="btn btn-primary" onClick={updateCart}>Checkout</Button></td>
+                            <td colSpan={5}><Button className="btn btn-primary" onClick={chekout}>Checkout</Button></td>
                         </tr>
                     </tbody>
                 </Table>

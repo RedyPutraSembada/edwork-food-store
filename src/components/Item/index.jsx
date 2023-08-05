@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap"
+import { Trash } from "react-bootstrap-icons";
 
-const Item = ({ item, getQty, onUpdateQty }) => {
+const Item = ({ item, getQty, deleteData }) => {
 
     let [quantity, setQuantity] = useState(item.qty);
 
@@ -33,6 +34,7 @@ const Item = ({ item, getQty, onUpdateQty }) => {
                 <td>{item.name}</td>
                 <td>{rupiah(item.price)}</td>
                 <td><Button className="btn btn-primary mx-2" onClick={() => { onDel() }}>-</Button> {quantity} <Button className="btn btn-primary mx-2" onClick={() => { onPlus() }}>+</Button></td>
+                <td><Button className="btn btn-danger mx-2" onClick={() => { deleteData(item) }}><Trash /></Button></td>
             </tr>
         </>
     )

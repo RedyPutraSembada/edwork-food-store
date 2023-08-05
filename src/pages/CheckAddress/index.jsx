@@ -20,14 +20,6 @@ const CheckAddress = () => {
         getDataAddress()
     }, [])
 
-    // useEffect(() => {
-    //     console.log(address);
-    // }, [address])
-
-    useEffect(() => {
-        console.log(activ);
-    }, [activ])
-
     const getDataAddress = async () => {
         const data = await getAddress();
         setAddress(data.data);
@@ -40,7 +32,6 @@ const CheckAddress = () => {
         try {
             let res = await orderProduct(formData);
             localStorage.removeItem('cart');
-            console.log(res.data);
             navigate('/invoice', { state: res.data._id });
         } catch (error) {
             console.log(error);

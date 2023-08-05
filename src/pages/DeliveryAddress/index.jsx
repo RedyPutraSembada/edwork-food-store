@@ -53,7 +53,6 @@ const DeliveryAddress = () => {
                 id: id,
             });
             let res = await getWhereAddress(id);
-            console.log(res.data);
             setValue(res.data);
             handleShow();
         }
