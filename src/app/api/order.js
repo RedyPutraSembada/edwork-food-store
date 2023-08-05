@@ -11,6 +11,16 @@ export const orderProduct = async (data) => {
     });
 }
 
+export const updateStatusProduct = async (id, data) => {
+    const dataUserLogin = getUserToken();
+    return await axios.put(`http://localhost:3000/api/orders/${id}`, data, {
+        headers: {
+            Authorization: dataUserLogin,
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    });
+}
+
 export const getOrderProduct = async (limit = 10, skip = 0) => {
     const dataUserLogin = getUserToken();
     return await axios.get(`http://localhost:3000/api/orders?limit=${limit}&skip=${skip}`, {
