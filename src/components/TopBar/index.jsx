@@ -9,7 +9,7 @@ import { cartGet } from "../../app/api/cart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAllCart } from "../../app/features/cart/actions";
 
-const { Navbar, Nav, NavDropdown, InputGroup, Form } = require("react-bootstrap");
+const { Navbar, Nav, NavDropdown, InputGroup, Form, Modal, Table, Button } = require("react-bootstrap");
 const { PersonFill, Cart, Search } = require('react-bootstrap-icons');
 
 const TopBar = () => {
@@ -25,6 +25,9 @@ const TopBar = () => {
     const [admin, setAdmin] = useState(false);
     const navigate = useNavigate();
     let location = useLocation();
+    const [showModal, setShowModal] = useState(false);
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
 
     useEffect(() => {
         setNorifCart(dataCart.data.length);
@@ -136,7 +139,7 @@ const TopBar = () => {
                                 <>
                                     <Nav.Link href="/carts" style={{ display: "flex" }}><Cart style={{ marginTop: "10px" }} /><div><div style={{ fontSize: "12px", backgroundColor: "red", justifyContent: "end", paddingRight: "3px", paddingLeft: "3px", borderRadius: "50%", color: "white" }}>{notifCart}</div></div></Nav.Link>
                                     <NavDropdown title={<PersonFill />}>
-                                        <NavDropdown.Item href="#">Profile</NavDropdown.Item>
+                                        <NavDropdown.Item href="#" onClick={handleShow}>Profile</NavDropdown.Item>
                                         <NavDropdown.Item href="/pesanan">Pesanan</NavDropdown.Item>
                                         <NavDropdown.Item href="/delivery">Address</NavDropdown.Item>
                                     </NavDropdown>
@@ -149,6 +152,36 @@ const TopBar = () => {
                     </Nav>
                 </Navbar.Collapse>
             </Navbar >
+            {
+                name ? <Modal show={showModal} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Detail Profile</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Table>
+                            <tbody>
+                                <tr>
+                                    <td>Full Name</td>
+                                    <td>: {dataUserLogin.user?.full_name}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>: {dataUserLogin.user?.email}</td>
+                                </tr>
+                                <tr>
+                                    <td>Role</td>
+                                    <td>: {dataUserLogin.user?.role}</td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal> : ''
+            }
         </>
     )
 }
