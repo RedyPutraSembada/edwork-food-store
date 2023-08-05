@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap"
 
 const Item = ({ item, getQty, onUpdateQty }) => {
 
-    let [quantity, setQuantity] = useState(1);
+    let [quantity, setQuantity] = useState(item.qty);
 
     const rupiah = (number) => {
         return new Intl.NumberFormat("id-ID", {

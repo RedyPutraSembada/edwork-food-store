@@ -6,7 +6,8 @@ import { getAllProducts } from "../../app/features/product/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategory } from "../../app/api/categories";
 import { cartGet } from "../../app/api/cart";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getAllCart } from "../../app/features/cart/actions";
 
 const { Navbar, Nav, NavDropdown, InputGroup, Form } = require("react-bootstrap");
 const { PersonFill, Cart, Search } = require('react-bootstrap-icons');
@@ -23,6 +24,7 @@ const TopBar = () => {
     });
     const [admin, setAdmin] = useState(false);
     const navigate = useNavigate();
+    let location = useLocation();
 
     useEffect(() => {
         setNorifCart(dataCart.data.length);
@@ -52,6 +54,7 @@ const TopBar = () => {
     const getCart = async () => {
         let res = await cartGet();
         setNorifCart(res.data.length);
+        dispatch(getAllCart(res.data));
     }
 
     const getCategories = async () => {
@@ -67,8 +70,11 @@ const TopBar = () => {
                 let data = userLogout()
                 dispatch(data);
                 localStorage.removeItem('auth');
-                window.location.reload();
-                navigate('/');
+                if (location.pathname === '/') {
+                    window.location.reload();
+                } else {
+                    navigate('/');
+                }
             } catch (err) {
                 console.log(err);
             }
