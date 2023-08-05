@@ -23,9 +23,7 @@ const Tags = () => {
             window.tags.push(search[i]);
         }
         //! Belum mendapatkan data saat di get data dengan tags
-        console.log(window.tags);
         let res = await getProduct('', '', JSON.stringify(window.tags));
-        console.log(res.data.data);
         const data = getAllProducts(res.data.data);
         dispatch(data);
     }

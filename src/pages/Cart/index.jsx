@@ -21,10 +21,6 @@ const Cart = () => {
         }
     }, []);
 
-    useEffect(() => {
-        console.log(dataCart);
-    }, [dataCart])
-
     const chekout = async () => {
         let formData = {
             items: dataCart.data

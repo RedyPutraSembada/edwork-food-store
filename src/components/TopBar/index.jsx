@@ -91,7 +91,6 @@ const TopBar = () => {
     }
 
     const handleCategory = async (value) => {
-        console.log(value);
         let res = await getProduct('', value);
         let data = getAllProducts(res.data.data);
         dispatch(data);

@@ -81,7 +81,6 @@ const Product = () => {
                 value: value
             });
             let res = await showProduct(id);
-            console.log(res.data);
             setValue(res.data);
             setSelect(res.data.tags.map((item, i) => item.name))
             handleShow();

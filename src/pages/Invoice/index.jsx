@@ -19,7 +19,6 @@ const Invoice = () => {
 
     const getInvoiceById = async (id) => {
         let res = await getInvoice(id);
-        console.log(res.data);
         setInvoice(res.data)
     }
 
