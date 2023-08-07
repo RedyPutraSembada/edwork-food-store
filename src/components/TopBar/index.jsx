@@ -19,15 +19,13 @@ const TopBar = () => {
     const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [category, setCategory] = useState([]);
-    const [search, setSearch] = useState({
-        q: ''
-    });
     const [admin, setAdmin] = useState(false);
     const navigate = useNavigate();
     let location = useLocation();
     const [showModal, setShowModal] = useState(false);
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
 
     useEffect(() => {
         setNorifCart(dataCart.data.length);
@@ -51,8 +49,19 @@ const TopBar = () => {
 
 
     useEffect(() => {
-        handleSearch();
-    }, [search]);
+        const debounceId = setTimeout(() => {
+            handleSearch();
+        }, 500);
+
+        return () => {
+            clearTimeout(debounceId);
+        };
+    }, [searchTerm]);
+
+
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+
 
     const getCart = async () => {
         let res = await cartGet();
@@ -85,7 +94,7 @@ const TopBar = () => {
     }
 
     const handleSearch = async () => {
-        let res = await getProduct(search.q);
+        let res = await getProduct(searchTerm);
         let data = getAllProducts(res.data.data);
         dispatch(data);
     }
@@ -126,7 +135,7 @@ const TopBar = () => {
                         name="search"
                         placeholder="Search"
                         aria-label="Search"
-                        onChange={(e) => setSearch({ ...search, q: e.target.value })}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </InputGroup>
                 <Navbar.Collapse className="justify-content-end">
