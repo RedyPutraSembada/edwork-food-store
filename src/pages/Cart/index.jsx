@@ -46,7 +46,7 @@ const Cart = () => {
         if (cartindex > -1) {
             newCart[cartindex].qty = qty;
         }
-        dispatch(getAllCart(newCart))
+        updateCart(newCart);
     }
 
     const deleteData = async (value) => {
@@ -55,17 +55,19 @@ const Cart = () => {
         if (cartIndex > -1) {
             //* hapus pada index ke cartIndex dan hapus 1 data
             newCart.splice(cartIndex, 1);
-            let data = getAllCart(newCart);
-            dispatch(data);
+            updateCart(newCart);
+        }
+    }
+
+    const updateCart = async (newCart) => {
+        try {
             let formData = {
                 items: newCart
             }
-            try {
-                let res = await cartUpdate(formData)
-                dispatch(getAllCart(res.data));
-            } catch (error) {
-                console.log(error);
-            }
+            let res = await cartUpdate(formData);
+            dispatch(getAllCart(res.data));
+        } catch (error) {
+            console.error(error);
         }
     }
 
