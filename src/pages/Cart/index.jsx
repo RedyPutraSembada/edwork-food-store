@@ -58,6 +58,7 @@ const Cart = () => {
             updateCart(newCart);
         }
     }
+    //* test
 
     const updateCart = async (newCart) => {
         try {
